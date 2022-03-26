@@ -1,9 +1,17 @@
-import { Card, ProgressBar } from 'react-bootstrap';
+import { Card, ProgressBar, Stack, Button } from 'react-bootstrap';
 import { currencyFormatter } from '../utils';
+import AddExpense from './AddExpense';
 
-export default function BudgetCard({ name, amount, max }) {
+export default function BudgetCard({ name, amount, max, gray, addExpenseCallback, budgetIndex }) {
+  const classNames = []
+  if (amount > max) {
+    classNames.push("bg-danger", "bg-opacity-10")
+  } else if (gray) {
+    classNames.push("bg-light")
+  }
+
   return (
-    <Card>
+    <Card className={classNames.join(" ")}>
       <Card.Body>
         <Card.Title className="d-flex 
           justify-content-between 
@@ -25,6 +33,10 @@ export default function BudgetCard({ name, amount, max }) {
           max={max}
           now={amount}
         />
+        <Stack direction="horizontal" gap="2" className="mt-4">
+          <Button variant="outline-primary" className="ms-auto" onClick={() => { addExpenseCallback(budgetIndex, 150, "shoes") }}>Add Expense</Button>
+          <Button variant="outline-secondary">View Expenses</Button>
+        </Stack>
       </Card.Body>
     </Card>
   )
