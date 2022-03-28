@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap'; 
 
 
-export default function AddExpense() {
+export default function AddExpense({addExpenseCallback, budgetIndex}) {
   const [show, setShow] = useState(false);
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [expensesName, setExpensesName] = useState('')
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleSubmit = () => {
     setShow(false);
-
+    console.log(addExpenseCallback);
+    addExpenseCallback(budgetIndex, Number(amount), expensesName);
   }
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
+      <Button variant="outline-primary" className="ms-auto" onClick={handleShow}>
+        Add Expense
       </Button>
 
       <Modal show={show} onHide={handleClose}>
@@ -29,8 +31,14 @@ export default function AddExpense() {
             Name:
             <input 
               type="text"
-              value={amount}
-              onChange={(e) => setAmount(...amount + e.target.value)}
+              onChange={(e) => setExpensesName(e.target.value)}
+            />
+          </label>
+          <label>
+            Amount:
+            <input 
+              type="number"
+              onChange={(e) => setAmount(e.target.value)}
             />
           </label>
         </Modal.Body>
@@ -38,7 +46,7 @@ export default function AddExpense() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSubmit}>
             Save Changes
           </Button>
         </Modal.Footer>

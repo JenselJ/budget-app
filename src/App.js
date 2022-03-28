@@ -13,11 +13,13 @@ function App() {
   const [budgets, setBudget] = useState(newBudgets)
 
   function addBudget(name, amount, max) {
-    setBudget([...budgets, {name, amount, max}])
+    setBudget([...budgets, {name, amount, max, expenses: []}])
   }
 
   function addExpense(budgetIndex, amount, expenseName) {
     const budgetsList = JSON.parse(JSON.stringify(budgets))
+
+    console.log( budgetIndex, amount, expenseName, budgetsList)
 
     budgetsList[budgetIndex].expenses.push({
       amount: amount,
@@ -52,8 +54,13 @@ function App() {
             name={budget.name}
             addExpenseCallback={addExpense}
             budgetIndex={index}
+            expenses={budget.expenses}
             gray
-            amount={budget.expenses.map(expense => expense.amount).reduce((a,b) => a + b)} 
+            amount={
+              budget.expenses.length > 0 ?
+                budget.expenses.map(expense => expense.amount).reduce((a,b) => a + b) :
+                0
+            } 
             max={budget.max} />
   ))}
     </div>

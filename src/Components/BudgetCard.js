@@ -1,14 +1,16 @@
-import { Card, ProgressBar, Stack, Button } from 'react-bootstrap';
+import { Card, ProgressBar, Stack, Button, Modal } from 'react-bootstrap';
 import { currencyFormatter } from '../utils';
 import AddExpense from './AddExpense';
+import { useState } from 'react';
 
-export default function BudgetCard({ name, amount, max, gray, addExpenseCallback, budgetIndex }) {
+export default function BudgetCard({ name, amount, max, gray, addExpenseCallback, budgetIndex, expenses }) {
   const classNames = []
   if (amount > max) {
     classNames.push("bg-danger", "bg-opacity-10")
   } else if (gray) {
     classNames.push("bg-light")
   }
+
 
   return (
     <Card className={classNames.join(" ")}>
@@ -34,13 +36,55 @@ export default function BudgetCard({ name, amount, max, gray, addExpenseCallback
           now={amount}
         />
         <Stack direction="horizontal" gap="2" className="mt-4">
-          <Button variant="outline-primary" className="ms-auto" onClick={() => { addExpenseCallback(budgetIndex, 150, "shoes") }}>Add Expense</Button>
-          <Button variant="outline-secondary">View Expenses</Button>
+        <AddExpense addExpenseCallback={addExpenseCallback} budgetIndex={budgetIndex}/>
+        <ViewExpensesModal expenses={expenses}/>
+        <Button variant="outline-secondary">View Expenses</Button>
         </Stack>
       </Card.Body>
     </Card>
   )
 }
+
+function ViewExpensesModal({expenses}) {
+
+  const [show, setShow] = useState(false);
+
+  const handleShow = () => setShow(true);
+
+  const handleClose = () => {
+    setShow(false)
+  }
+
+  return (
+    <>
+    
+    <Button variant="outline-primary" className="ms-auto" onClick={handleShow}>
+        View Expense
+      </Button>
+
+    <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Woohoo, you're reading this text in a modal!
+          {JSON.stringify(expenses)}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          {/* <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button> */}
+        </Modal.Footer>
+      </Modal>
+
+    </>
+  )
+}
+
+
 
 
 function getProgressBarVariant(amount, max) {
